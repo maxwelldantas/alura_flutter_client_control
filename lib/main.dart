@@ -22,7 +22,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Controle de clientes',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.indigo),
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.indigo,
+          foregroundColor: Colors.white,
+        ),
+      ),
       initialRoute: '/',
       routes: {
         '/': (context) => const ClientsPage(title: 'Clientes'),
