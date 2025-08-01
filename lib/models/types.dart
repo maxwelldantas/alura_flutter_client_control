@@ -10,4 +10,9 @@ class Types extends ChangeNotifier {
     types.add(clientType);
     notifyListeners();
   }
+
+  void remove(int index) {
+    types.removeAt(index);
+    notifyListeners();
+  }
 }
