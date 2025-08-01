@@ -1,5 +1,7 @@
 import 'package:alura_flutter_client_control/models/client_type.dart';
+import 'package:alura_flutter_client_control/models/types.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../components/hamburger_menu.dart';
 import '../components/icon_picker.dart';
@@ -13,13 +15,6 @@ class ClientTypesPage extends StatefulWidget {
 }
 
 class _ClientTypesPageState extends State<ClientTypesPage> {
-  List<ClientType> types = [
-    ClientType(name: 'Platinum', icon: Icons.credit_card),
-    ClientType(name: 'Golden', icon: Icons.card_membership),
-    ClientType(name: 'Titanium', icon: Icons.credit_score),
-    ClientType(name: 'Diamond', icon: Icons.diamond),
-  ];
-
   IconData? selectedIcon;
 
   @override
@@ -27,21 +22,25 @@ class _ClientTypesPageState extends State<ClientTypesPage> {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       drawer: const HamburgerMenu(),
-      body: ListView.builder(
-        itemCount: types.length,
-        itemBuilder: (context, index) {
-          return Dismissible(
-            key: UniqueKey(),
-            background: Container(color: Colors.red),
-            child: ListTile(
-              leading: Icon(types[index].icon),
-              title: Text(types[index].name),
-              iconColor: Colors.deepOrange,
-            ),
-            onDismissed: (direction) {
-              setState(() {
-                types.removeAt(index);
-              });
+      body: Consumer<Types>(
+        builder: (BuildContext context, Types list, Widget? child) {
+          return ListView.builder(
+            itemCount: list.types.length,
+            itemBuilder: (context, index) {
+              return Dismissible(
+                key: UniqueKey(),
+                background: Container(color: Colors.red),
+                child: ListTile(
+                  leading: Icon(list.types[index].icon),
+                  title: Text(list.types[index].name),
+                  iconColor: Colors.deepOrange,
+                ),
+                onDismissed: (direction) {
+                  setState(() {
+                    list.types.removeAt(index);
+                  });
+                },
+              );
             },
           );
         },
@@ -117,9 +116,11 @@ class _ClientTypesPageState extends State<ClientTypesPage> {
               child: const Text("Salvar"),
               onPressed: () {
                 selectedIcon ??= Icons.credit_score;
-                types.add(ClientType(name: nomeInput.text, icon: selectedIcon));
+                Provider.of<Types>(
+                  context,
+                  listen: false,
+                ).add(ClientType(name: nomeInput.text, icon: selectedIcon));
                 selectedIcon = null;
-                setState(() {});
                 Navigator.pop(context);
               },
             ),
